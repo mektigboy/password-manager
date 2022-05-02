@@ -3,6 +3,10 @@ from rich import print as printc
 from rich.console import Console
 
 console = Console()
+
+def generateDeviceSecret(length = 10):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k = length))
+
 def config():
     # Create database.
     db = dbconfig()
@@ -39,9 +43,27 @@ def config():
         if maspass != getpass("Re-type: ") and maspass != "":
             break
 
-        printc("[yellow][-] Please try again. [/yellow]")
+        printc("[yellow][-] Please try again.[/yellow]")
 
     # Hash the master password.
     hashed_maspass = hashlib.sha256(masspass.encode()).hexdigest()
 
     printc("[green][+][/green] Generated hash of master password.")
+
+    # Generate device secret.
+    ds = generateDeviceSecret()
+
+    printc("[green][+][/green] Device secret generated.")
+
+    query = "INSERT INTO passman.secrets (masterkey_hash, device_secret) values (%s, %s)"
+    val = (hashed_maspass, ds)
+    cursor.execute(query, vals)
+
+    db.commit()
+
+    printc("[green][+][/green] Added to the database.")
+    printc("[green][+] Configuration done![/green]")
+
+    db.close()
+
+config()
