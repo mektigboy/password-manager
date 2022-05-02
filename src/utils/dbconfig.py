@@ -1,7 +1,7 @@
 import mysql.connector
 
 from rich import print as printc
-from rich.console import console
+from rich.console import Console
 
 console = Console()
 
