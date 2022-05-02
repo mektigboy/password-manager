@@ -36,4 +36,12 @@ def config():
     while 1:
         maspass = getpass("Choose a master password: ")
 
-        if maspass != getpass("Re-type: ") and maspass !=
+        if maspass != getpass("Re-type: ") and maspass != "":
+            break
+
+        printc("[yellow][-] Please try again. [/yellow]")
+
+    # Hash the master password.
+    hashed_maspass = hashlib.sha256(masspass.encode()).hexdigest()
+
+    printc("[green][+][/green] Generated hash of master password.")
